@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAppDispatch} from '../../app/hooks';
 import {useSelector} from 'react-redux';
 import {
@@ -31,27 +31,24 @@ const ContactForm = () => {
   const { id} = useParams();
 
 
+  useEffect(() => {
+    if (oneContact) {
+      setContactForm({...oneContact});
+    }
+  }, [oneContact]);
 
-  const getOneContact = useCallback(async () => {
-      if (id) {
-        await dispatch(fetchOne(id));
-        if (oneContact) {
-          setContactForm({...oneContact});
-        }
-      } else {
-        setContactForm({
-          name: '',
-          phone: '',
-          email: '',
-          photo: ''
-        });
-      }
-
-    },[dispatch, navigate]);
-
-    useEffect(() => {
-      void getOneContact();
-    }, [getOneContact]);
+  useEffect(() => {
+    if (id) {
+      void dispatch(fetchOne(id));
+    } else {
+      setContactForm({
+        name: '',
+        phone: '',
+        email: '',
+        photo: ''
+      });
+    }
+  }, [dispatch, id]);
 
 
   const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {
