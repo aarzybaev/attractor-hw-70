@@ -1,11 +1,12 @@
 import {useAppDispatch} from '../../app/hooks';
 import {useSelector} from 'react-redux';
-import {selectContacts, selectFetchAllLoading} from '../../store/contactSlice';
+import {selectContacts, selectFetchAllLoading, selectRemoveLoading} from '../../store/contactSlice';
 import {useEffect, useState} from 'react';
-import {fetchAll} from '../../store/contactThunks';
+import {fetchAll, removeContact} from '../../store/contactThunks';
 import Spinner from '../../components/Spinner/Spinner';
 import Modal from '../../components/Modal/Modal';
 import {useNavigate} from 'react-router-dom';
+import ButtonSpinner from '../../components/ButtonSpinner/ButtonSpinner';
 
 const Contacts = () => {
   const [showModal, setShowModal] = useState({
@@ -15,6 +16,7 @@ const Contacts = () => {
   const dispatch = useAppDispatch();
   const contacts = useSelector(selectContacts);
   const fetchLoading = useSelector(selectFetchAllLoading);
+  const removeLoading = useSelector(selectRemoveLoading);
   const navigate = useNavigate();
 
   useEffect( () => {
@@ -22,9 +24,10 @@ const Contacts = () => {
   }, [dispatch]);
 
   const cancel = () => setShowModal(prevState => ({...prevState, status: false}));
-  const removeContact = (id: string) => {
+  const removeHandle = async (id: string) => {
+    await dispatch(removeContact(id));
+    await dispatch(fetchAll());
     cancel();
-    console.log(id);
   };
 
   const getContactInfo = () => {
@@ -63,9 +66,11 @@ const Contacts = () => {
         </button>
         <button
           className="btn btn-danger"
-          onClick={() => removeContact(showModal.id)}
+          onClick={() => removeHandle(showModal.id)}
+          disabled={removeLoading}
         >
           Delete
+          {removeLoading && <ButtonSpinner />}
         </button>
       </div>
     </Modal>

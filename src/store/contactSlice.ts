@@ -1,6 +1,6 @@
 import {Apicontact, Contact} from '../types';
 import {createSlice} from '@reduxjs/toolkit';
-import {createContact, editContact, fetchAll, fetchOne} from './contactThunks';
+import {createContact, editContact, fetchAll, fetchOne, removeContact} from './contactThunks';
 import {RootState} from '../app/store';
 
 interface ContactsState {
@@ -10,6 +10,7 @@ interface ContactsState {
   fetchOneLoading: boolean;
   createLoading: boolean;
   editLoading: boolean;
+  removeLoading: boolean;
 }
 
 const initialState: ContactsState = {
@@ -19,6 +20,7 @@ const initialState: ContactsState = {
   fetchOneLoading: false,
   createLoading: false,
   editLoading: false,
+  removeLoading: false,
 };
 
 export const contactsSlice = createSlice({
@@ -59,6 +61,14 @@ export const contactsSlice = createSlice({
     }).addCase(editContact.rejected, (state) => {
       state.editLoading = false;
     });
+
+    builder.addCase(removeContact.pending, (state) => {
+      state.removeLoading = true;
+    }).addCase(removeContact.fulfilled, (state) => {
+      state.removeLoading = false;
+    }).addCase(removeContact.rejected, (state) => {
+      state.removeLoading = false;
+    });
   }
 });
 
@@ -69,3 +79,4 @@ export const selectFetchAllLoading = (state: RootState) => state.contacts.fetchL
 export const selectFetchOneLoading = (state: RootState) => state.contacts.fetchOneLoading;
 export const selectCreateLoading = (state: RootState) => state.contacts.createLoading;
 export const selectEditLoading = (state: RootState) => state.contacts.editLoading;
+export const selectRemoveLoading = (state: RootState) => state.contacts.removeLoading;

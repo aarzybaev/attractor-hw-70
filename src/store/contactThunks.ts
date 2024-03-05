@@ -47,3 +47,10 @@ export const fetchOne = createAsyncThunk<Apicontact, string>(
     return data;
   }
 );
+
+export const removeContact = createAsyncThunk<void, string>(
+  'contacts/remove',
+  async (id) => {
+    await axiosAPI.delete('/contacts/' + id + '.json');
+  }
+);
