@@ -61,12 +61,22 @@ const ContactForm = () => {
     }));
   };
 
+
   const formHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     if (id) {
       await dispatch(editContact({...contactForm, id}));
     } else {
-      await dispatch(createContact(contactForm));
+      if (contactForm.name.trim() &&
+        contactForm.phone.trim() &&
+        contactForm.email.trim() &&
+        contactForm.photo.trim()
+      ) {
+        await dispatch(createContact(contactForm));
+      } else {
+        alert('Whitespace(s) is not allowed! Enter data.');
+      }
+
     }
   };
 
