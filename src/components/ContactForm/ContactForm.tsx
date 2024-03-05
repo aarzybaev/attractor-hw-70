@@ -47,7 +47,7 @@ const ContactForm = () => {
         });
       }
 
-    },[dispatch, oneContact?.name, navigate]);
+    },[dispatch, navigate]);
 
     useEffect(() => {
       void getOneContact();
